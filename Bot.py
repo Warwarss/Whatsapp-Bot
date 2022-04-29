@@ -1,6 +1,7 @@
 import os
+import mouse
 import time
-import datetime
+from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,21 +12,36 @@ from selenium.webdriver.common.by import By
 
 global driver
 global wait5
-def send_message_to (name,message):    
+
+class Person:
+    def __init__(self,name):
+        self.name=name
+    status=False 
+
+def open_chat (name):    
         chat_value=f'//span[@title="{name}"]'
-        search_box=wait5.until(EC.presence_of_element_located((By.XPATH,'//div[@contenteditable="true"][@data-tab="3"]')))
+        wait5.until(EC.presence_of_element_located((By.XPATH,'//div[@contenteditable="true"][@data-tab="3"]'))).click
+        search_box=driver.find_element(by=By.XPATH, value='//div[@contenteditable="true"][@data-tab="3"]')
         search_box.clear()
         search_box.click()
-        search_box.send_keys(name)
-        time.sleep(3)
+        search_box.send_keys(name)       
+        wait5.until(EC.presence_of_element_located((By.XPATH,chat_value)))
         chat=driver.find_element(by=By.XPATH, value=chat_value)
-        time.sleep(1)
         chat.click()
-        chat_box=driver.find_element(by=By.XPATH, value='//div[@title="Schreib eine Nachricht"]')
-        for i in range(25):
-            chat_box.click()
-            chat_box.send_keys("Allah")
-            chat_box.send_keys(Keys.RETURN)
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        try:
+            status=driver.find_element(by=By.XPATH, value='//span[@title="online"]')
+        except:
+            print(f"{name} is not online", current_time )
+            if (person.status==True):
+                person.status=False
+                print(f"{name} went offline at", current_time )
+        else:
+            print(f"{name} is online", current_time )
+            if (person.status==False):
+                person.status=True
+                print(f"{name} came online at", current_time)
 
 PATH="C:\Program Files (x86)\Chromedriver\chromedriver.exe"
 options = webdriver.ChromeOptions()
@@ -34,6 +50,10 @@ options.add_argument(r"--profile--directory=C:\Users\ACER\AppData\Local\Google\C
 driver = webdriver.Chrome(PATH,chrome_options=options)
 wait5=WebDriverWait(driver, 5)
 driver.get("https://web.whatsapp.com")
-send_message_to("kizilbas","Allah")
-
 time.sleep(10)
+Array=["Alp Can ELVER"]
+for name in Array:
+    person=Person(name)
+while(1):
+    for name in Array:
+        open_chat(name)   

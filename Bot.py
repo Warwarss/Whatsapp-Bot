@@ -1,6 +1,7 @@
 import os
 import mouse
 import time
+import config
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -51,9 +52,11 @@ driver = webdriver.Chrome(PATH,chrome_options=options)
 wait5=WebDriverWait(driver, 5)
 driver.get("https://web.whatsapp.com")
 time.sleep(10)
-Array=["Alp Can ELVER"]
-for name in Array:
-    person=Person(name)
+Array=config.Array
+
+for value in Array:
+     exec(f'{value} = Person(name = value)')
+
 while(1):
     for name in Array:
-        open_chat(name)   
+        open_chat(name)

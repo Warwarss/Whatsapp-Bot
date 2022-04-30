@@ -1,5 +1,4 @@
 import os
-import mouse
 import time
 import config
 from datetime import datetime
@@ -31,17 +30,18 @@ def open_chat (name):
         chat.click()
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
+        print(d[name].status)
         try:
-            status=driver.find_element(by=By.XPATH, value='//span[@title="online"]')
+            driver.find_element(by=By.XPATH, value='//span[@title="online"]')
         except:
             print(f"{name} is not online", current_time )
-            if (person.status==True):
-                person.status=False
+            if (d[name].status==True):
+                d[name].status=False
                 print(f"{name} went offline at", current_time )
         else:
             print(f"{name} is online", current_time )
-            if (person.status==False):
-                person.status=True
+            if (d[name].status==False):
+                d[name].status=True
                 print(f"{name} came online at", current_time)
 
 PATH="C:\Program Files (x86)\Chromedriver\chromedriver.exe"
@@ -53,9 +53,9 @@ wait5=WebDriverWait(driver, 5)
 driver.get("https://web.whatsapp.com")
 time.sleep(10)
 Array=config.Array
-
-for value in Array:
-     exec(f'{value} = Person(name = value)')
+d={}
+for name in Array:
+   d[name]=Person(name)
 
 while(1):
     for name in Array:

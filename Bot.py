@@ -1,6 +1,6 @@
-import os
 import time
 import config
+import csv
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -30,19 +30,26 @@ def open_chat (name):
         chat.click()
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
-        print(d[name].status)
+        write_csv(name,current_time,d[name].status)
         try:
             driver.find_element(by=By.XPATH, value='//span[@title="online"]')
         except:
             print(f"{name} is not online", current_time )
             if (d[name].status==True):
                 d[name].status=False
-                print(f"{name} went offline at", current_time )
+                print(f"{name} went offline at", current_time,d[name].status)
+                write_csv(name,current_time,d[name].status)
+
         else:
             print(f"{name} is online", current_time )
             if (d[name].status==False):
                 d[name].status=True
                 print(f"{name} came online at", current_time)
+                write_csv(name,current_time,d[name].status)
+
+def write_csv(name,current_time,status):
+    with open(f'{name}.csv', mode='w') as _file:
+        writer = csv.writer(_file, delimiter=',')
 
 PATH="C:\Program Files (x86)\Chromedriver\chromedriver.exe"
 options = webdriver.ChromeOptions()

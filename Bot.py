@@ -16,7 +16,8 @@ global wait5
 class Person:
     def __init__(self,name):
         self.name=name
-    status=False 
+    status=False
+    online_time=""
 
 def open_chat (name):    
         chat_value=f'//span[@title="{name}"]'
@@ -30,26 +31,26 @@ def open_chat (name):
         chat.click()
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
-        write_csv(name,current_time,d[name].status)
         try:
-            driver.find_element(by=By.XPATH, value='//span[@title="online"]')
+            driver.find_element(by=By.XPATH, value='//span[@title="çevrimiçi"]')
         except:
             print(f"{name} is not online", current_time )
             if (d[name].status==True):
                 d[name].status=False
                 print(f"{name} went offline at", current_time,d[name].status)
-                write_csv(name,current_time,d[name].status)
+                write_csv(name,current_time,d[name].online_time,d[name].status)
 
         else:
             print(f"{name} is online", current_time )
             if (d[name].status==False):
                 d[name].status=True
+                d[name].online_time=current_time
                 print(f"{name} came online at", current_time)
-                write_csv(name,current_time,d[name].status)
 
-def write_csv(name,current_time,status):
-    with open(f'{name}.csv', mode='w') as _file:
+def write_csv(name,current_time,online_time,status):
+    with open(f'{name}.csv', mode='a',newline="") as _file:
         writer = csv.writer(_file, delimiter=',')
+        writer.writerow([name,online_time,current_time])
 
 PATH="C:\Program Files (x86)\Chromedriver\chromedriver.exe"
 options = webdriver.ChromeOptions()
